@@ -20,7 +20,7 @@ connection.connect(function(err){
 });
 
 function displayProduct(){
-    connection.query("SELECT item_id, product_name, price FROM products", function(error, response){
+    connection.query("SELECT item_id, product_name, price, stock_quantity FROM products", function(error, response){
         if (error) throw error;
         console.table(response);
        //connection.end();
@@ -56,9 +56,25 @@ function purchaseItem(itemId,purchaseQuantity ){
             let totalPrice = response[0].price * purchaseQuantity;
             console.log("Thank you for your order!");
             console.log("Your purchase total is $" + totalPrice);
+        }else{
+            console.log("Insufficient quantity available.");
+            console.log("Please make another selection.");
             
-            
-        }
+        }; 
         
-    })
+            let query = "UPDATE products SET ? WHERE ?";
+            let stockUpdate = response[0].stock_quantity - purchaseQuantity
+            connection.query(query, [{
+                stock_quantity: stockUpdate,
+
+            },{
+                item_id: itemId
+            }], function(error, response){
+                if(error) console.log(error);
+                
+                
+            })
+        displayProduct();
+            
+        })
 }
