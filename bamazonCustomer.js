@@ -20,7 +20,7 @@ connection.connect(function(err){
 });
 
 function displayProduct(){
-    connection.query("SELECT item_id, product_name, price, stock_quantity FROM products", function(error, response){
+    connection.query("SELECT item_id, product_name, price FROM products", function(error, response){
         if (error) throw error;
         console.table(response);
        //connection.end();
@@ -71,7 +71,7 @@ function purchaseItem(itemId,purchaseQuantity ){
                 item_id: itemId
             }], function(error, response){
                 if(error) console.log(error);
-                
+                connection.end();
                 
             })
         displayProduct();
